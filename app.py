@@ -4,7 +4,7 @@ from helper import normalize_text
 import tensorflow as tf 
 from tensorflow.keras.models import load_model
 
-model = load_model('C:\Users\besha\OneDrive\Desktop\ODC\Sentiment_Lstm\Sentiment_Analysis_LSTM\model_with_embidding.keras')
+model = load_model(r'model_with_embidding.keras')
 
 title = st.title('Welcome to Your Sentiment Analysis Application')
 
