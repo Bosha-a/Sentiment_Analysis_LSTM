@@ -3,6 +3,7 @@ from helper import normalize_text
 from tensorflow.keras.models import load_model
 import re
 import html
+import pickle
 import unicodedata
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
@@ -12,6 +13,12 @@ from nltk.corpus import stopwords
 import nltk 
 nltk.download('stopwords')
 stop_words = stopwords.words('english')
+
+with open('tokenizer.pkl' , 'rb') as file: 
+    tokenizer = pickle.load(file)
+
+
+model = load_model(r'model_with_embidding.keras')
 
 
 def remove_special_chars(text):
@@ -96,20 +103,21 @@ def normalize_text( text):
 
     return ''.join(words)
 
-model = load_model(r'model_with_embidding.keras')
+def normalize_corpus(corpus):
+  return [normalize_text(t) for t in corpus]
+
 
 title = st.title('Welcome to Your Sentiment Analysis Application')
 
 text = st.text_input('Enter your text here:')
 text = normalize_text(text)
 
-
 button = st.button('Predict')
 
 dict = {1 : 'Positive', 0 : 'Negative'}
 
 if button:
-    prediction = model.predict(text)[0]
-    sentiment = dict[prediction]
+    prediction = model.predict(tokenizer)[0]
+    predicted_class = int(prediction.round())  # Convert to an integer (0 or 1)
+    sentiment = dict[predicted_class]
     st.write(sentiment)
-    
